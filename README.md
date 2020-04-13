@@ -1,2 +1,0 @@
-# Blz-fellowship
-Bridgelabz-fellowship
