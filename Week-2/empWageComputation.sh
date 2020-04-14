@@ -15,6 +15,7 @@ halfDayWork=0;
 absent=0;
 totalEmpHours=0;
 totalWorkingDays=0;
+count=1;
 
 function getWorkingHours() {
 	case $1 in
@@ -54,13 +55,26 @@ do
 	totalEmpHours=$(($totalEmpHours + $empHours))
 	empDailyWage[$totalWorkingDays]="$( calcDailyWage $empHours )"
 	empWageAlongDailyWage[$totalWorkingDays]="$( calcWageAlongDailyWage $totalEmpHours )";
+	days[$count]=$count;
+	((count++))
 done
 totalWage=$(($WAGE_PER_HR * $totalEmpHours))
-echo "Total Number of Full Day Work		: $fullDayWork"
-echo "Total Number of Half Day Work		: $halfDayWork"
-echo "Total Number of Absent Day		: $absent"	
-echo "Total EmpHours in a Month		: $totalEmpHours";
-echo "Daily Wages are				: ${empDailyWage[@]}"
-echo "Employee Wage Along With Daily Wage	: ${empWageAlongDailyWage[@]}"
-echo "Total Wage in a Month			: $totalWage";
-
+totalDay=$(($fullDayWork + $halfDayWork + $absent))
+echo "---------------------------------------------------------------------------------------------";
+echo "		~: Days           Daily-Wage              Emp-Wage along with daily wage :~";
+echo "---------------------------------------------------------------------------------------------";
+i=0;
+while [ $i -lt $totalDay ]
+do
+	((i++))
+	echo "		   ${days[$i]}			Rs.${empDailyWage[$i]}		   Rs.${empWageAlongDailyWage[$i]}"
+#	((i++))
+done
+echo "----------------------------------------------------------------------------------------------";
+echo "Total Wage in a Month			: Rs.$totalWage/-";
+echo "----------------------------------------------------------------------------------------------";
+echo "Total Number of Full Day Work           : $fullDayWork"
+echo "Total Number of Half Day Work           : $halfDayWork"
+echo "Total Number of Absent Day              : $absent"      
+echo "Total EmpHours in a Month               : $totalEmpHours";
+echo "----------------------------------------------------------------------------------------------";
