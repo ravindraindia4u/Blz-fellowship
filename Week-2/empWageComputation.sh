@@ -2,13 +2,10 @@
 echo "		~: Welcome to Employee Wage Computation Program :~";
 
 #CONSTANTS FOR THE PROGRAM
-PRESENT=1;
-ABSENT=0;
 WAGE_PER_HR=20;
 MAX_HRS_IN_MONTH=100;
 IS_FULL_TIME=2;
 IS_PART_TIME=1;
-IS_ABSENT=0;
 NUM_WORKING_DAYS=20;
 
 #VARIABLES
@@ -18,21 +15,32 @@ halfDayWork=0;
 absent=0;
 totalEmpHours=0;
 totalWorkingDays=0;
+
+function getWorkingHours() {
+	case $1 in
+		$IS_FULL_TIME)
+			empHours=8;;
+		$IS_PART_TIME)
+			empHours=4;;
+		*)
+			empHours=0;;
+	esac
+	echo $empHours;
+}
 while [[ $totalEmpHours -lt $MAX_HRS_IN_MONTH && $totalWorkingDays -lt $NUM_WORKING_DAYS ]]
 do
 	((totalWorkingDays++))
 	empCheck=$((RANDOM%3))
-	case $empCheck in
-		$IS_FULL_TIME)
-			((fullDayWork++));
-			empHours=8;;
-		$IS_PART_TIME)
-			((halfDayWork++));
-			empHours=4;;
-		*)
-			((absent++));
-			empHours=0;;
-	esac
+	if [ $empCheck -eq 2 ]
+	then
+		((fullDayWork++));
+	elif [ $empCheck -eq 1 ]
+	then
+		((halfDayWork++));
+	else
+		((absent++));
+	fi
+	empHours="$( getWorkingHours $empCheck )"
 	totalEmpHours=$(($totalEmpHours + $empHours))
 done
 totalWage=$(($WAGE_PER_HR * $totalEmpHours))
