@@ -5,29 +5,37 @@ echo "		~: Welcome to Employee Wage Computation Program :~";
 PRESENT=1;
 ABSENT=0;
 WAGE_PER_HR=20;
-IS_FULL_TIME=1;
-IS_PART_TIME=0;
+IS_FULL_TIME=2;
+IS_PART_TIME=1;
 IS_ABSENT=0;
+NUM_WORKING_DAYS=20;
 
 #VARIABLES
 empHours=0;
-attendanceCheck=$((RANDOM%2))
-if [ $PRESENT -eq $attendanceCheck ]
-then
-	empCheck=$((RANDOM%2))
+fullDayWork=0;
+halfDayWork=0;
+absent=0;
+totalEmpHours=0;
+for (( day=1; day<=$NUM_WORKING_DAYS; day++ ))
+do
+	empCheck=$((RANDOM%3))
 	case $empCheck in
 		$IS_FULL_TIME)
-			echo "Employee is Present - Full Time";
+			((fullDayWork++));
 			empHours=8;;
 		$IS_PART_TIME)
-			echo "Employe is Present - Part Time";
+			((halfDayWork++));
 			empHours=4;;
+		*)
+			((absent++));
+			empHours=0;;
 	esac
-	dailyWage=$(($WAGE_PER_HR * $empHours))
-	echo "Daily Wage = "$dailyWage;
-else
-	echo "Employee is Absent";
-	dailyWage=$(($WAGE_PER_HR * $IS_ABSENT))
-	echo "Daily Wage = "$dailyWage;
-fi
+	totalEmpHours=$(($totalEmpHours + $empHours))
+done
+totalWage=$(($WAGE_PER_HR * $totalEmpHours))
+echo "Total Number of Full Day Work	: $fullDayWork"
+echo "Total Number of Half Day Work	: $halfDayWork"
+echo "Total Number of Absent Day	: $absent"	
+echo "Total EmpHours in a Month	: $totalEmpHours";
+echo "Total Wage in a Month		: $totalWage";
 
