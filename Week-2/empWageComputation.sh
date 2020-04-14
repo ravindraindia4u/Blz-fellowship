@@ -27,6 +27,16 @@ function getWorkingHours() {
 	esac
 	echo $empHours;
 }
+function calcDailyWage() {
+	local workHours=$1;
+	dailyWage=$(($workHours * $WAGE_PER_HR));
+	echo $dailyWage;
+}
+function calcWageAlongDailyWage(){
+	local totalEmpHours=$1;
+	empWage=$(($totalEmpHours * $WAGE_PER_HR));
+	echo $empWage;
+}
 while [[ $totalEmpHours -lt $MAX_HRS_IN_MONTH && $totalWorkingDays -lt $NUM_WORKING_DAYS ]]
 do
 	((totalWorkingDays++))
@@ -42,11 +52,15 @@ do
 	fi
 	empHours="$( getWorkingHours $empCheck )"
 	totalEmpHours=$(($totalEmpHours + $empHours))
+	empDailyWage[$totalWorkingDays]="$( calcDailyWage $empHours )"
+	empWageAlongDailyWage[$totalWorkingDays]="$( calcWageAlongDailyWage $totalEmpHours )";
 done
 totalWage=$(($WAGE_PER_HR * $totalEmpHours))
-echo "Total Number of Full Day Work	: $fullDayWork"
-echo "Total Number of Half Day Work	: $halfDayWork"
-echo "Total Number of Absent Day	: $absent"	
-echo "Total EmpHours in a Month	: $totalEmpHours";
-echo "Total Wage in a Month		: $totalWage";
+echo "Total Number of Full Day Work		: $fullDayWork"
+echo "Total Number of Half Day Work		: $halfDayWork"
+echo "Total Number of Absent Day		: $absent"	
+echo "Total EmpHours in a Month		: $totalEmpHours";
+echo "Daily Wages are				: ${empDailyWage[@]}"
+echo "Employee Wage Along With Daily Wage	: ${empWageAlongDailyWage[@]}"
+echo "Total Wage in a Month			: $totalWage";
 
